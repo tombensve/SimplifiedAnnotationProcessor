@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>se.natusoft.annotation</groupId>
+    <artifactId>SimplifiedAnnotationProcessor</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+    <name>SimplifiedAnnotationProcessor</name>
+
+    <url>http://github/tombensve/SimplifiedAnnotationProcessor</url>
+
+    <!--
+        Project Information
+    -->
+    <description>
+        An abstract annotation processor base class that simplifies the annotation
+        processing, but also limits it slightly. It is however good enough for most
+        cases and makes things a bit easier and clearer.
+    </description>
+    <properties>
+        <copyrightYear>2013</copyrightYear>
+        <copyrightHolder>Natusoft AB</copyrightHolder>
+        <copyrightHolderWeb>http://www.natusoft.se/</copyrightHolderWeb>
+    </properties>
+    <organization>
+        <name>${copyrightHolder}</name>
+        <url>${copyrightHolderWeb}</url>
+    </organization>
+    <inceptionYear>${copyrightYear}</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Tommy Svensson</name>
+            <email>tommy@natusoft.se</email>
+        </developer>
+    </developers>
+    <issueManagement>
+        <system>github</system>
+        <url>http://github.com/tombensve/SimplifiedAnnotationProcessor/issues</url>
+    </issueManagement>
+
+    <!--
+        Dependencies
+    -->
+    <dependencies>
+        <!--
+        <dependency>
+            <groupId>se.natusoft.tools.codelicmgr</groupId>
+            <artifactId>CodeLicenseManager-annotations-retention-source</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--
+        Building
+    -->
+    <build>
+        <extensions>
+            <!-- Enabling the use of FTP -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>2.3</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <!--
+                Setup for java 7.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <excludes>
+                        <exclude>META-INF/services/javax.annotation.processing.Processor</exclude>
+                    </excludes>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+             <!--
+                Copy Annotation processor discovery config after local compiling have been done
+                since if the config is found before annotation processor is compiled the build
+                will fail.
+             -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/processors</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                Force checksums when installing to repository.
+
+                I suspect that this might be unneccesarry since I think
+                deploy creates checksums anyhow when deploying to external
+                repository.
+            -->
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <createChecksum>true</createChecksum>
+                </configuration>
+            </plugin>
+
+            <!--
+                Copy relevant license files to target on install.
+            -->
+            <plugin>
+                <groupId>se.natusoft.tools.codelicmgr</groupId>
+                <artifactId>CodeLicenseManager-maven-plugin</artifactId>
+                <version>2.1.1</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>se.natusoft.tools.codelicmgr</groupId>
+                        <artifactId>CodeLicenseManager-licenses-common-opensource</artifactId>
+                        <version>2.0</version>
+                    </dependency>
+                </dependencies>
+
+                <executions>
+                    <execution>
+                        <id>install-licence-info</id>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+
+                            <installOptions>
+                                <verbose>true</verbose>
+                                <licenseDir>${basedir}/target/license</licenseDir>
+                                <thirdpartyLicenseDir>${basedir}/target/license/thirdparty</thirdpartyLicenseDir>
+                            </installOptions>
+
+                            <createLicensesMarkdown>true</createLicensesMarkdown>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+        Distribution Management
+    -->
+
+    <repositories>
+        <repository>
+            <id>maven-natusoft-se</id>
+            <name>
+                Natusofts maven repository
+            </name>
+            <url>http://maven.natusoft.se/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-natusoft-se</id>
+            <name>
+                Natusoft maven repository.
+            </name>
+            <url>http://maven.natusoft.se/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!--
+        Profiles
+    -->
+    <profiles>
+        <profile>
+            <id>apply-licence-info</id>
+            <build>
+                <plugins>
+                    <plugin>
+
+                        <groupId>se.natusoft.tools.codelicmgr</groupId>
+                        <artifactId>CodeLicenseManager-maven-plugin</artifactId>
+                        <version>2.1.1</version>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>se.natusoft.tools.codelicmgr</groupId>
+                                <artifactId>CodeLicenseManager-licenses-common-opensource</artifactId>
+                                <version>2.1.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>se.natusoft.tools.codelicmgr</groupId>
+                                <artifactId>CodeLicenseManager-source-updater-slashstar-comment</artifactId>
+                                <version>2.1.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>se.natusoft.tools.codelicmgr</groupId>
+                                <artifactId>CodeLicenseManager-source-updater-html-xml</artifactId>
+                                <version>2.1.1</version>
+                            </dependency>
+                        </dependencies>
+
+                        <configuration>
+                            <project>
+                                <codeVersion>${project.version}</codeVersion>
+                            </project>
+                            <!-- All options are optional. -->
+                            <codeOptions>
+                                <verbose>true</verbose>
+                                <!-- If not set uses extension on source file to resolve. -->
+                                <codeLanguage><!-- by source extension. -->
+                                </codeLanguage>
+                                <!-- If true updates the license information in source code. -->
+                                <updateLicenseInfo>true</updateLicenseInfo>
+                                <!-- If true updates the copyright information in source code. -->
+                                <updateCopyright>true</updateCopyright>
+                                <!-- If true updates the project information in source code. -->
+                                <updateProject>true</updateProject>
+                                <!-- If true will add authors information to source files that does not have it. This is not always implemented! -->
+                                <addAuthorsBlock>true</addAuthorsBlock>
+                                <!-- The directories to scan for source code to update with project & license information. -->
+                                <sourceCodeDirs>
+                                    src/main/java/**/.*.java,src/test/java/**/.*.java,src/assembly/**/.*.xml
+                                </sourceCodeDirs>
+
+                            </codeOptions>
+
+                            <userData>
+                                <!--name></name>
+                                <value></value-->
+                            </userData>
+
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>apply-licence-info</id>
+                                <goals>
+                                    <goal>apply</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                            </execution>
+                        </executions>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
