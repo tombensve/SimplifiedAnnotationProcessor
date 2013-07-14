@@ -12,5 +12,5 @@ _A tool for generating HTML and PDF from markdown for the purpose of documentati
 
 [Docs](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/docs/SimplifiedAnnotationProcessor.md)
 
-[Licenses](https://github.com/tombensve/SimplifiedAnnotationProcessor/licenses.md)
+[Licenses](https://github.com/tombensve/SimplifiedAnnotationProcessor//blob/master/licenses.md)
 
