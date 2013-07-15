@@ -94,7 +94,7 @@ import se.natusoft.annotation.processor.simplified.model.Type;
  *      }
  *
  *      // Gets called for processing the specified annotation per round.
- *      // annotation - This represents the actual annotation being processed (in general!).
+ *      // annotation - This represents the actual annotation being processed (this parameter can be skipped!).
  *      // annotatedElements - All language elements annotated with the annotation.
  *     &nbsp;@Process(MyAnnotation.class)
  *      public processMyAnn(TypeElement annotation, Set&lt;? extends Element&gt; annotatedElements) {
@@ -527,7 +527,17 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
                 try {
                     Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotationTypeElement);
                     verbose("    @" + annotationTypeElement.getSimpleName() + " - Processing " + elementsAnnotatedWith.size() + " elements.");
-                    Object ret = processMethod.invoke(this, elementsAnnotatedWith);
+                    Object ret = null;
+                    if (processMethod.getParameterCount() == 1) {
+                        ret = processMethod.invoke(this, elementsAnnotatedWith);
+                    }
+                    else if (processMethod.getParameterCount() == 2) {
+                        ret = processMethod.invoke(this, annotationTypeElement, elementsAnnotatedWith);
+                    }
+                    else {
+                        failCompile("@Process annotated method must take either (TypeElement, Set<? extends Element>) or " +
+                            "(Set<? extends Element>)! [" + processMethod.toGenericString() + "]");
+                    }
                     annotationHandled = true;
                 }
                 catch (Exception e) {

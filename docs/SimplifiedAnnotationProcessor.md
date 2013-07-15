@@ -30,7 +30,7 @@ An abstract annotation processor base class that simplifies the annotation proce
         }
   
         // Gets called for processing the specified annotation per round.
-        // annotation - This represents the actual annotation being processed (in general!).
+        // annotation - This represents the actual annotation being processed (This parameter can be skipped!)
         // annotatedElements - All language elements annotated with the annotation.
         @Process(MyAnnotation.class)
         public processMyAnn(TypeElement annotation, Set<? extends Element> annotatedElements) {
