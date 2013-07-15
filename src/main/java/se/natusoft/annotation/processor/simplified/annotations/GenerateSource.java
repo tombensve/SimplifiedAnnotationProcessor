@@ -29,7 +29,12 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
+ *     
+ * AUTHORS
+ *     tommy ()
+ *         Changes:
+ *         2013-07-15: Created!
+ *         
  */
 package se.natusoft.annotation.processor.simplified.annotations;
 

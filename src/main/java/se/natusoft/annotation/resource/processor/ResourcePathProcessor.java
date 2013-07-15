@@ -30,6 +30,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  *     
+ * AUTHORS
+ *     tommy ()
+ *         Changes:
+ *         2013-07-15: Created!
+ *         
  */
 package se.natusoft.annotation.resource.processor;
 
