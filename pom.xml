@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>se.natusoft.annotation</groupId>
-    <artifactId>SimplifiedAnnotationProcessor</artifactId>
+    <artifactId>simplified-annotation-processor</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
     <name>SimplifiedAnnotationProcessor</name>
