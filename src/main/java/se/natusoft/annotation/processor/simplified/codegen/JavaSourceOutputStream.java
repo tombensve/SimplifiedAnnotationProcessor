@@ -39,6 +39,8 @@
 package se.natusoft.annotation.processor.simplified.codegen;
 
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 /**
@@ -249,9 +251,9 @@ public class JavaSourceOutputStream extends CodeGeneratorOutputStream {
     }
 
     /**
-     * Prints a single line intComment.
+     * Prints a single line comment.
      * 
-     * @param intComment The intComment to print.
+     * @param comment The comment to print.
      */
     public void singeLineComment(String comment) {
         print("// ");
@@ -261,7 +263,7 @@ public class JavaSourceOutputStream extends CodeGeneratorOutputStream {
     /**
      * Prints a single line intComment.
      *
-     * @param intComment The intComment to print.
+     * @param comment The comment to print.
      */
     public void singeLineCommentln(String comment) {
         indent();
@@ -327,6 +329,20 @@ public class JavaSourceOutputStream extends CodeGeneratorOutputStream {
         print("import ");
         print(importSpec);
         println(";");
+    }
+
+    /**
+     * Writes the @Generated annotation.
+     *
+     * @param generator The generator generating this.
+     * @param comments Any comments.
+     */
+    public void generatedAnnotation(String generator, String comments) {
+        importLine("javax.annotation.Generated");
+        emptyLine();
+        annotation("Generated", "value={\"" + generator + "\"}",
+                "comments=\"" + comments + "\"",
+                "date=\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + "\"");
     }
 
     /**
@@ -522,12 +538,27 @@ public class JavaSourceOutputStream extends CodeGeneratorOutputStream {
      * @param name The name of the field.
      */
     public void field(String access, String type, String name) {
+        field(access, type, name, null);
+    }
+
+    /**
+     * Writes a field.
+     *
+     * @param access The access of the field.
+     * @param type The type of the field.
+     * @param name The name of the field.
+     * @param value A default value.
+     */
+    public void field(String access, String type, String name, String value) {
         indent();
         print(access);
         print(" ");
         print(type);
         print(" ");
         print(name);
+        if (value != null) {
+            print(" = " + value);
+        }
         println(";");
     }
 

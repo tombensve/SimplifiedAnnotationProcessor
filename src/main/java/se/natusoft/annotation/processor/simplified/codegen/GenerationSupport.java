@@ -38,6 +38,8 @@
  */
 package se.natusoft.annotation.processor.simplified.codegen;
 
+import se.natusoft.annotation.processor.simplified.Verbose;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,13 +67,13 @@ public class GenerationSupport {
     /** We wrap a Filer instance. */
     private Filer filer = null;
 
-    private boolean verbose = false;
+    private Verbose verbose = null;
 
     //
     // Constructors
     //
 
-    public GenerationSupport(Filer filer, boolean verbose) {
+    public GenerationSupport(Filer filer, Verbose verbose) {
         this.filer = filer;
         this.verbose = verbose;
     }
@@ -85,9 +87,7 @@ public class GenerationSupport {
     //
 
     private void verbose(String text) {
-        if (this.verbose) {
-            System.out.println(text);
-        }
+        this.verbose.verbose(text);
     }
 
     /**
@@ -99,7 +99,7 @@ public class GenerationSupport {
      * @throws IOException
      */
     public JavaFileObject getWritableJavaFileObjectForToBeCompiledSource(String qualifiedName, Element element) throws IOException {
-        verbose("    Producing Java source file: " + qualifiedName);
+        verbose("Producing Java source file: " + qualifiedName);
         return this.filer.createSourceFile(qualifiedName, element);
     }
 
@@ -145,7 +145,7 @@ public class GenerationSupport {
      *
      * @throws IOException
      */
-    public JavaSourceOutputStream getToBeCompileJavaSourceOutputStream(String qualifiedName, Element element) throws IOException {
+    public JavaSourceOutputStream getToBeCompiledJavaSourceOutputStream(String qualifiedName, Element element) throws IOException {
         return new JavaSourceOutputStream(getToBeCompiledSourceFileStream(qualifiedName, element));
     }
 
@@ -156,7 +156,7 @@ public class GenerationSupport {
      *
      * @throws IOException
      */
-    public JavaSourceOutputStream getToBeCompileJavaSourceOutputStream(String qualifiedName) throws IOException {
+    public JavaSourceOutputStream getToBeCompiledJavaSourceOutputStream(String qualifiedName) throws IOException {
         return new JavaSourceOutputStream(getToBeCompiledSourceFileStream(qualifiedName));
     }
 
@@ -305,7 +305,7 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getWritableMavenResourceFileStream(String path) throws IOException {
-        verbose("    Producing maven resource file: " + path);
+        verbose("Producing maven resource file: " + path);
         int ix = path.lastIndexOf(File.separatorChar);
         String directory = null;
         String name = null;
@@ -334,7 +334,7 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getWritableCurrentDirRelativeResourceFileStream(String path) throws IOException {
-        verbose("    Producing current directory relative resource file: " + path);
+        verbose("Producing current directory relative resource file: " + path);
         int ix = path.lastIndexOf(File.separatorChar);
         String directory = null;
         String name = null;
@@ -368,7 +368,7 @@ public class GenerationSupport {
      * @param resourceRelPath
      */
     public ResourceReference getBestEffortResourceReference(String resourceRelPath, String[] tryFirstRootPaths) {
-        verbose("    Producing best effort resource file: " + resourceRelPath);
+        verbose("Producing best effort resource file: " + resourceRelPath);
         ResourceReference rr = null;
         File resourceRoot = null;
 
@@ -401,7 +401,7 @@ public class GenerationSupport {
      * It will start by checking "src/main/resources". If that were not found then the Filer will be used with
      * StandardLocation.SOURCE_OUTPUT as root path.
      *
-     * @param resourceRelPath
+     * @param resourcePath The path to the resource.
      */
     public ResourceReference getBestEffortResourceReference(String resourcePath) {
         return getBestEffortResourceReference(resourcePath, new String[0]);
@@ -438,7 +438,8 @@ public class GenerationSupport {
         /**
          * Creates a new ResourceReference.
          *
-         * @param fileObject A FileObject for this reference.
+         * @param filer A Filer instance.
+         * @param relativePath The relative path to the resource.
          */
         public ResourceReference(Filer filer, String relativePath) {
             this.filer = filer;

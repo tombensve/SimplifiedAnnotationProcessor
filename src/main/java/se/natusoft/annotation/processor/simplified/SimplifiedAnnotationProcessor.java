@@ -139,7 +139,7 @@ import se.natusoft.annotation.processor.simplified.model.Type;
  * </pre>
  * These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
  */
-public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends AbstractProcessor {
+public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends AbstractProcessor implements Verbose {
     //
     // Private Members
     //
@@ -242,9 +242,20 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
      *
      * @param text The text to print.
      */
-    private void verbose(String text) {
+    public void verbose(String text) {
         if (this.verbose) {
-            System.out.println(text);
+            System.out.println("[INFO]     " + text);
+        }
+    }
+
+    /**
+     * Prints the text to stdout if verbose is true.
+     *
+     * @param text The text to print.
+     */
+    public void verboseHeading(String text) {
+        if (this.verbose) {
+            System.out.println("[INFO] " + text);
         }
     }
 
@@ -399,7 +410,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
      */
     private void setupLocals() {
         this.messager = super.processingEnv.getMessager();
-        this.generationSupport = new GenerationSupport(super.processingEnv.getFiler(), this.verbose);
+        this.generationSupport = new GenerationSupport(super.processingEnv.getFiler(), this);
         this.elementUtils = super.processingEnv.getElementUtils();
         this.typeUtils = super.processingEnv.getTypeUtils();
         Type.elementUtils = this.elementUtils;
@@ -419,7 +430,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
         boolean allAnnotationsHandled = true;
 
         if (!roundEnv.processingOver()) {
-            verbose(getClass().getSimpleName() + " invoked:");
+            verboseHeading(getClass().getSimpleName() + " invoked:");
 
             // @NewRound
             Method newRoundMethod = findAnnotatedMethod(NewRound.class);
@@ -487,7 +498,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
             }
         }
         else {
-            verbose("    Done.\n");
+            verbose("Done.\n");
             // @AllProcessed
             List<Method> allProcessedMethods = findAnnotatedMethods(AllProcessed.class);
             for (Method allProcessedMethod : allProcessedMethods) {
@@ -522,36 +533,31 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
 
         Method processMethod = findProcessMethod(annotationTypeElement.getQualifiedName());
         if (processMethod != null) {
-            if (processMethod.getParameterTypes().length == 1
-                    && processMethod.getParameterTypes()[0].equals(Set.class)) {
-                try {
-                    Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotationTypeElement);
-                    verbose("    @" + annotationTypeElement.getSimpleName() + " - Processing " + elementsAnnotatedWith.size() + " elements.");
-                    Object ret = null;
-                    if (processMethod.getParameterCount() == 1) {
-                        ret = processMethod.invoke(this, elementsAnnotatedWith);
-                    }
-                    else if (processMethod.getParameterCount() == 2) {
-                        ret = processMethod.invoke(this, annotationTypeElement, elementsAnnotatedWith);
-                    }
-                    else {
-                        failCompile("@Process annotated method must take either (TypeElement, Set<? extends Element>) or " +
-                            "(Set<? extends Element>)! [" + processMethod.toGenericString() + "]");
-                    }
+            try {
+                Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotationTypeElement);
+                verbose("@" + annotationTypeElement.getSimpleName() + " - Processing " + elementsAnnotatedWith.size() + " elements.");
+                Object ret = null;
+                if (processMethod.getParameterTypes().length == 1) {
+                    ret = processMethod.invoke(this, elementsAnnotatedWith);
                     annotationHandled = true;
                 }
-                catch (Exception e) {
-                    if (e.getCause() != null) {
-                        Throwable cause = e.getCause();
-                        failCompile("" + cause.getMessage(), annotationTypeElement, cause);
-                    }
-                    else {
-                         failCompile("" + e.getMessage(), annotationTypeElement, e);
-                     }
+                else if (processMethod.getParameterTypes().length == 2) {
+                    ret = processMethod.invoke(this, annotationTypeElement, elementsAnnotatedWith);
+                    annotationHandled = true;
+                }
+                else {
+                    failCompile("@Process annotated method must take either (TypeElement, Set<? extends Element>) or " +
+                        "(Set<? extends Element>)! [" + processMethod.toGenericString() + "]");
                 }
             }
-            else {
-                failCompile("Found annotated processing method, but it does not take one TypeElement argument!", annotationTypeElement);
+            catch (Exception e) {
+                if (e.getCause() != null) {
+                    Throwable cause = e.getCause();
+                    failCompile("" + cause.getMessage(), annotationTypeElement, cause);
+                }
+                else {
+                     failCompile("" + e.getMessage(), annotationTypeElement, e);
+                 }
             }
         }
         else {
