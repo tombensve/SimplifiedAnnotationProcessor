@@ -54,7 +54,7 @@ import se.natusoft.annotation.processor.simplified.codegen.GenerationSupport;
  * This automatically updates the META-INF/services/javax.annotation.processing.Processor with the fully qualified processor name.
  */
 @ProcessedAnnotations({AutoDiscovery.class})
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class AutoDiscoveryProcessor extends SimplifiedAnnotationProcessor {
     //
     // Constants

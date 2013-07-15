@@ -58,7 +58,7 @@ import se.natusoft.annotation.processor.simplified.annotations.AutoDiscovery;
  */
 @AutoDiscovery
 @SupportedAnnotationTypes("se.natusoft.annotation.resource.MavenResource")
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MavenResourceProcessor extends AbstractProcessor {
 
     @Override
