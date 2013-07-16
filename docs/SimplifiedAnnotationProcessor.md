@@ -73,7 +73,40 @@ The se.natusoft.annotation.processor.simplified.model contains the following cla
 
 These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
 
-Here is an example of a complete processor:
+## Maven usage
+
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>se.natusoft.annotation</groupId>
+            <artifactId>simplified-annotation-processor</artifactId>
+            <version>1.0</version>
+        </dependendcy>
+        ...
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>maven-natusoft-se</id>
+            <name>
+                Natusofts maven repository
+            </name>
+            <url>http://maven.natusoft.se/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-natusoft-se</id>
+            <name>
+                Natusoft maven repository.
+            </name>
+            <url>http://maven.natusoft.se/</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+
+## Example of a complete processor:
 
     import se.natusoft.annotation.beanannotationprocessor.annotations.Bean;
     import se.natusoft.annotation.processor.simplified.SimplifiedAnnotationProcessor;
