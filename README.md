@@ -8,7 +8,7 @@ __Author:__ Tommy Svensson (tommy@natusoft.se)
 
 ----
 
-_A tool for generating HTML and PDF from markdown for the purpose of documentation._
+_Baseclass and support classes for simplifying annotation processing._
 
 [Docs](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/docs/SimplifiedAnnotationProcessor.md)
 
