@@ -43,18 +43,18 @@ import javax.lang.model.element.Element;
 /**
  *
  */
-public class MemberVariable extends Variable {
+public class SAPMemberVariable extends SAPVariable {
 
     //
     // Cosntructors
     //
 
     /**
-     * Creates a new Variable.
+     * Creates a new SAPVariable.
      *
      * @param element The element representing the field.
      */
-    public MemberVariable(Element element) {
+    public SAPMemberVariable(Element element) {
         super(element);
     }
 
@@ -65,7 +65,7 @@ public class MemberVariable extends Variable {
     /**
      * Returns the type this member is a member of.
      */
-    public Type getMemberOf() {
-        return new Type(getElement().getEnclosingElement());
+    public SAPType getMemberOf() {
+        return new SAPType(getElement().getEnclosingElement());
     }
 }

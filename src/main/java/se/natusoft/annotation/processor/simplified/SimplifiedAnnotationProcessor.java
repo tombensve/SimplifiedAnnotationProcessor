@@ -60,7 +60,7 @@ import se.natusoft.annotation.processor.simplified.annotations.GenerateSource;
 import se.natusoft.annotation.processor.simplified.annotations.NewRound;
 import se.natusoft.annotation.processor.simplified.annotations.Process;
 import se.natusoft.annotation.processor.simplified.annotations.ProcessedAnnotations;
-import se.natusoft.annotation.processor.simplified.model.Type;
+import se.natusoft.annotation.processor.simplified.model.SAPType;
 
 /**
  * This extends the AbstractProcessor and provides a simple API for subclasses for processing annotations.
@@ -130,12 +130,12 @@ import se.natusoft.annotation.processor.simplified.model.Type;
  * <p>
  * The se.natusoft.annotation.processor.simplified.model contains the following classes:
  * <pre>
- *   Annotation     - Wraps an AnnotationMirror
- *   BaseElement    - Baseclass for all other in this package.
- *   Executable     - Wraps ExecutableElement (constructors and methods)
- *   Variable       - Wraps VariableElement (field, parameter, etc)
- *   MemberVariable - Supclass of Variable and provides getter for the Type the member is part of.
- *   Type           - Wraps TypeElement (Class, Interace, Enum)
+ *   SAPAnnotation     - Wraps an AnnotationMirror
+ *   SAPBaseElement    - Baseclass for all other in this package.
+ *   SAPExecutable     - Wraps ExecutableElement (constructors and methods)
+ *   SAPVariable       - Wraps VariableElement (field, parameter, etc)
+ *   SAPMemberVariable - Supclass of SAPVariable and provides getter for the SAPType the member is part of.
+ *   SAPType           - Wraps TypeElement (Class, Interace, Enum)
  * </pre>
  * These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
  */
@@ -413,7 +413,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
         this.generationSupport = new GenerationSupport(super.processingEnv.getFiler(), this);
         this.elementUtils = super.processingEnv.getElementUtils();
         this.typeUtils = super.processingEnv.getTypeUtils();
-        Type.elementUtils = this.elementUtils;
+        SAPType.elementUtils = this.elementUtils;
     }
 
     /**

@@ -413,7 +413,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
     /**
      * Prints the text with variable expandsion from the variable context.
      * <p>
-     * Variable references are in the form of ${name} or ${get:name} which
+     * SAPVariable references are in the form of ${name} or ${get:name} which
      * takes the name and converts it to a getter including (), or ${set:name}
      * which takes the name and converts it to a setter <b>not</b> including ().
      * 
@@ -427,7 +427,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
     /**
      * Prints the text with variable expandsion from the variable context.
      * <p>
-     * Variable references are in the form of ${name} or ${get:name} which
+     * SAPVariable references are in the form of ${name} or ${get:name} which
      * takes the name and converts it to a getter including (), or ${set:name}
      * which takes the name and converts it to a setter <b>not</b> including ().
      *
@@ -443,7 +443,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
     /**
      * Does a contentln() with variable expandsion from the variable context.
      * <p>
-     * Variable references are in the form of ${name} or ${get:name} which
+     * SAPVariable references are in the form of ${name} or ${get:name} which
      * takes the name and converts it to a getter including (), or ${set:name}
      * which takes the name and converts it to a setter <b>not</b> including ().
      *

@@ -46,7 +46,7 @@ import javax.lang.model.element.TypeElement;
 /**
  * Wraps an AnnotationMirror.
  */
-public class Annotation {
+public class SAPAnnotation {
     //
     // Private Members
     //
@@ -59,11 +59,11 @@ public class Annotation {
     //
 
     /**
-     * Creates a new Annotation.
+     * Creates a new SAPAnnotation.
      *
      * @param annotationMirror The AnnotationMirror to wrap.
      */
-    public Annotation(AnnotationMirror annotationMirror) {
+    public SAPAnnotation(AnnotationMirror annotationMirror) {
         this.annotationMirror = annotationMirror;
     }
 
@@ -89,8 +89,8 @@ public class Annotation {
         // If value still is null we have to resolve the default value.
         if (value == null) {
             TypeElement annotationTypeElement = (TypeElement)this.annotationMirror.getAnnotationType().asElement();
-            Type annotationType = new Type(annotationTypeElement);
-            Executable annotationMethod = annotationType.getMethodByName(name);
+            SAPType annotationType = new SAPType(annotationTypeElement);
+            SAPExecutable annotationMethod = annotationType.getMethodByName(name);
             value = annotationMethod.getAnnotationDefaultValue();
         }
 

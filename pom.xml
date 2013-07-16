@@ -97,7 +97,7 @@
             </plugin>
 
              <!--
-                Copy Annotation processor discovery config after local compiling have been done
+                Copy SAPAnnotation processor discovery config after local compiling have been done
                 since if the config is found before annotation processor is compiled the build
                 will fail.
              -->

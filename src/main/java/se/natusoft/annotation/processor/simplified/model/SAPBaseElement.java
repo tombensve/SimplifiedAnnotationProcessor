@@ -48,7 +48,7 @@ import javax.lang.model.element.TypeElement;
 /**
  * Base class wrapping Element.
  */
-public class BaseElement {
+public class SAPBaseElement {
     //
     // Private Members
     //
@@ -61,11 +61,11 @@ public class BaseElement {
     //
 
     /**
-     * Creates a new BaseElement.
+     * Creates a new SAPBaseElement.
      *
      * @param element The element to wrap.
      */
-    public BaseElement(Element element) {
+    public SAPBaseElement(Element element) {
         this.element = element;
     }
 
@@ -129,10 +129,12 @@ public class BaseElement {
     public AnnotationMirror getAnnotationMirrorByName(String annotation) {
         AnnotationMirror annotationMirror = null;
 
-        for (AnnotationMirror mirror : getAnnotationMirrors()) {
-            //System.out.println("#### \"" + ((TypeElement)mirror.getAnnotationType().asElement()).getSimpleName() + "\".contentEquals(\"" + annotation + "\") = " + ((TypeElement)mirror.getAnnotationType().asElement()).getSimpleName().contentEquals(annotation));
-            if (((TypeElement)mirror.getAnnotationType().asElement()).getSimpleName().contentEquals(annotation)) {
-                annotationMirror = mirror;
+        for (AnnotationMirror am : getAnnotationMirrors()) {
+            if (am.getAnnotationType().toString().equals(annotation)) {
+                annotationMirror = am;
+            }
+            else if (((TypeElement)am.getAnnotationType().asElement()).getSimpleName().contentEquals(annotation)) {
+                annotationMirror = am;
                 break;
             }
         }
@@ -141,13 +143,13 @@ public class BaseElement {
     }
 
     /**
-     * Returns the annotations as wrapped Annotation objects.
+     * Returns the annotations as wrapped SAPAnnotation objects.
      */
-    public List<Annotation> getAnnotations() {
-        List<Annotation> annotations = new ArrayList<Annotation>();
+    public List<SAPAnnotation> getAnnotations() {
+        List<SAPAnnotation> annotations = new ArrayList<SAPAnnotation>();
 
         for (AnnotationMirror annotationMirror : getAnnotationMirrors()) {
-            Annotation annotation = new Annotation(annotationMirror);
+            SAPAnnotation annotation = new SAPAnnotation(annotationMirror);
             annotations.add(annotation);
         }
 
@@ -155,20 +157,32 @@ public class BaseElement {
     }
 
     /**
-     * Returns an Annotation wrapper for the specfied annotation.
+     * Returns an SAPAnnotation wrapper for the specified annotation.
      *
-     * @param annotation The annotation name to get the Annotation wrapper for.
+     * @param annotation The annotation name to get the SAPAnnotation wrapper for.
      */
-    public Annotation getAnnotationByName(String annotation) {
-        Annotation ann = null;
+    public SAPAnnotation getAnnotationByName(String annotation) {
+        SAPAnnotation ann = null;
 
         AnnotationMirror annMirror = getAnnotationMirrorByName(annotation);
         if (annMirror != null) {
-            ann = new Annotation(annMirror);
+            ann = new SAPAnnotation(annMirror);
         }
 
         return ann;
     }
+
+    /**
+     * Returns the specified annotation or null if not available.
+     *
+     * @param annClass The annotation class to get.
+     *
+     * @return
+     */
+    public SAPAnnotation getAnnotationByClass(Class annClass) {
+        return getAnnotationByName(annClass.getName());
+    }
+
 
     @Override
     public int hashCode() {
@@ -180,11 +194,11 @@ public class BaseElement {
         if (object == null) {
             return false;
         }
-        if (!(object instanceof BaseElement)) {
+        if (!(object instanceof SAPBaseElement)) {
             return false;
         }
 
-        BaseElement bmObject = (BaseElement)object;
+        SAPBaseElement bmObject = (SAPBaseElement)object;
         return this.element.getSimpleName().equals(bmObject.element.getSimpleName()) &&
                 this.element.getKind() == bmObject.getKind() &&
                 this.element.asType().toString().equals(bmObject.element.asType().toString());

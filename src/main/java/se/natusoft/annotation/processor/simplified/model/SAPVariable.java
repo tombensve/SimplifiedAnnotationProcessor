@@ -45,19 +45,19 @@ import javax.lang.model.element.VariableElement;
 /**
  * This wraps a VariableElement and represents a field or parameter.
  * <p>
- * For a field consider using the MemberVariable subclass instead!
+ * For a field consider using the SAPMemberVariable subclass instead!
  */
-public class Variable extends BaseElement {
+public class SAPVariable extends SAPBaseElement {
     //
     // Cosntructors
     //
 
     /**
-     * Creates a new Variable.
+     * Creates a new SAPVariable.
      *
      * @param element The element representing the field.
      */
-    public Variable(Element element) {
+    public SAPVariable(Element element) {
         super(element);
     }
 

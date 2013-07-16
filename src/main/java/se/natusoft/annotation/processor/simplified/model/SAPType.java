@@ -40,17 +40,15 @@ package se.natusoft.annotation.processor.simplified.model;
 
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
 
 /**
  * Wraps a TypeElement and represents a type.
  */
-public class Type extends BaseElement {
+public class SAPType extends SAPBaseElement {
     //
     // Private Members
     //
@@ -63,11 +61,11 @@ public class Type extends BaseElement {
     //
 
     /**
-     * Creates a new Type instance.
+     * Creates a new SAPType instance.
      *
      * @param typeElement The TypeElement to wrap.
      */
-    public Type(Element typeElement) {
+    public SAPType(Element typeElement) {
         super(typeElement);
     }
 
@@ -90,6 +88,13 @@ public class Type extends BaseElement {
     }
 
     /**
+     * Returns the type this type extends.
+     */
+    public String getExtends() {
+        return getTypeElement().getSuperclass().toString();
+    }
+
+    /**
      * Returns the package.
      */
     public String getPackage() {
@@ -100,12 +105,12 @@ public class Type extends BaseElement {
     /**
      * Returns the fields.
      */
-    public List<Variable> getFields() {
-        List<Variable> fields = new ArrayList<Variable>();
+    public List<SAPVariable> getFields() {
+        List<SAPVariable> fields = new ArrayList<SAPVariable>();
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind().isField()) {
-                fields.add(new Variable(elem));
+                fields.add(new SAPVariable(elem));
             }
         }
 
@@ -115,12 +120,12 @@ public class Type extends BaseElement {
     /**
      * Returns the constructors.
      */
-    public List<Executable> getConstructors() {
-        List<Executable> constructors = new ArrayList<Executable>();
+    public List<SAPExecutable> getConstructors() {
+        List<SAPExecutable> constructors = new ArrayList<SAPExecutable>();
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind() == ElementKind.CONSTRUCTOR) {
-                constructors.add(new Executable(elem));
+                constructors.add(new SAPExecutable(elem));
             }
         }
 
@@ -130,12 +135,12 @@ public class Type extends BaseElement {
     /**
      * Returns the methods.
      */
-    public List<Executable> getMethods() {
-        List<Executable> methods = new ArrayList<Executable>();
+    public List<SAPExecutable> getMethods() {
+        List<SAPExecutable> methods = new ArrayList<SAPExecutable>();
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind() == ElementKind.METHOD) {
-                methods.add(new Executable(elem));
+                methods.add(new SAPExecutable(elem));
             }
         }
 
@@ -145,12 +150,12 @@ public class Type extends BaseElement {
     /**
      * Returns all methods including inherited.
      */
-    public List<Executable> getAllMethods() {
-        List<Executable> methods = new ArrayList<Executable>();
+    public List<SAPExecutable> getAllMethods() {
+        List<SAPExecutable> methods = new ArrayList<SAPExecutable>();
 
         for (Element elem : elementUtils.getAllMembers(getTypeElement())) {
             if (elem.getKind() == ElementKind.METHOD) {
-                methods.add(new Executable(elem));
+                methods.add(new SAPExecutable(elem));
             }
         }
 
@@ -162,10 +167,10 @@ public class Type extends BaseElement {
      *
      * @param name The name of the  method to get.
      */
-    public Executable getMethodByName(String name) {
-        Executable method = null;
+    public SAPExecutable getMethodByName(String name) {
+        SAPExecutable method = null;
 
-        for (Executable executable : getAllMethods()) {
+        for (SAPExecutable executable : getAllMethods()) {
             //System.out.println("#### if (\"" + executable.getSimpleName() + "\".equals(\"" + name + "\") = " + executable.getSimpleName().equals(name));
             if (executable.getSimpleName().equals(name)) {
                 method = executable;
@@ -186,12 +191,12 @@ public class Type extends BaseElement {
     /**
      * Returns the inner interfaces.
      */
-    public List<Type> getInnerInterfaces() {
-        List<Type> types = new ArrayList<Type>();
+    public List<SAPType> getInnerInterfaces() {
+        List<SAPType> types = new ArrayList<SAPType>();
 
         for (Element element : super.getElement().getEnclosedElements()) {
             if (element.getKind() == ElementKind.INTERFACE) {
-                types.add(new Type(element));
+                types.add(new SAPType(element));
             }
         }
 
@@ -212,12 +217,12 @@ public class Type extends BaseElement {
         if (object == null) {
             return false;
         }
-        if (!(object instanceof Type)) {
+        if (!(object instanceof SAPType)) {
             return false;
         }
 
         TypeElement typeElement = getTypeElement();
-        TypeElement bmObject = ((Type)object).getTypeElement();
+        TypeElement bmObject = ((SAPType)object).getTypeElement();
         return typeElement.getQualifiedName().equals(bmObject.getQualifiedName()) &&
                 typeElement.getKind() == bmObject.getKind() &&
                 typeElement.asType().toString().equals(bmObject.asType().toString());

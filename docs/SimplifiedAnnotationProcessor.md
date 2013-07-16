@@ -75,6 +75,26 @@ These wrappers of javax.lang.model.element.* models makes it a little bit easier
 
 Here is an example of a complete processor:
 
+    import se.natusoft.annotation.beanannotationprocessor.annotations.Bean;
+    import se.natusoft.annotation.processor.simplified.SimplifiedAnnotationProcessor;
+    import se.natusoft.annotation.processor.simplified.annotations.*;
+    import se.natusoft.annotation.processor.simplified.annotations.Process;
+    import se.natusoft.annotation.processor.simplified.codegen.GenerationSupport;
+    import se.natusoft.annotation.processor.simplified.codegen.JavaSourceOutputStream;
+    import se.natusoft.annotation.processor.simplified.model.SAPAnnotation;
+    import se.natusoft.annotation.processor.simplified.model.SAPType;
+
+    import javax.annotation.processing.SupportedSourceVersion;
+    import javax.lang.model.SourceVersion;
+    import javax.lang.model.element.*;
+    import java.io.IOException;
+    import java.util.LinkedList;
+    import java.util.List;
+    import java.util.Set;
+
+    /**
+     * This generates the class that the annotated file extends.
+     */
     @AutoDiscovery
     @ProcessedAnnotations({Bean.class})
     @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -116,49 +136,67 @@ Here is an example of a complete processor:
         public void generate(GenerationSupport generationSupport) {
             try {
                 for (Element annotatedElement : this.toGenerate) {
-                    TypeElement type = (TypeElement)annotatedElement;
+                    SAPType type = new SAPType((TypeElement)annotatedElement);
 
-                    String genQName = type.getEnclosingElement().toString() + "." + type.getSuperclass().toString();
+                    String genQName = type.getPackage() + "." + type.getExtends();
                     JavaSourceOutputStream jos = generationSupport.getToBeCompiledJavaSourceOutputStream(genQName);
-                    jos.packageLine(type.getEnclosingElement().toString());
+                    jos.packageLine(type.getPackage());
                     jos.generatedAnnotation(getClass().getName(), "");
-                    jos.begClass("public", "", type.getSuperclass().toString());
-                    jos.begMethod("protected", "", "", type.getSuperclass().toString());
+                    jos.begClass("public", "", type.getExtends());
+                    jos.begMethod("protected", "", "", type.getExtends());
                     jos.endMethod();
                     jos.emptyLine();
                     {
-                        for (AnnotationMirror am : type.getAnnotationMirrors()) {
-                            for (ExecutableElement ee : am.getElementValues().keySet()) {
-                                if (ee.getSimpleName().contentEquals("value")) {
-                                    AnnotationValue annVal = am.getElementValues().get(ee);
-                                    List<AnnotationMirror> props = (List<AnnotationMirror>)annVal.getValue();
+                        SAPAnnotation beanAnnotation = type.getAnnotationByClass(Bean.class);
 
-                                    for (AnnotationMirror propMirror : props) {
-                                        Annotation propAnn = new Annotation(propMirror);
-                                        String propName = propAnn.getValueFor("name").toString(); // toInt() / toLong() / toFloat() ...
-                                        String propType = propAnn.getValueFor("type").toString();
-                                        String propDef = propAnn.getValueFor("init").toString();
+                        AnnotationValue annVal = beanAnnotation.getAnnotationValueFor("value");
+                        List<AnnotationMirror> props = (List<AnnotationMirror>)annVal.getValue();
 
-                                        verbose("Generating property: " + propName);
-                                        String defValue = propDef.trim().length() > 0 ? propDef : null;
-                                        jos.field("private", propType, propName, defValue);
+                        List<String> nonNullProps = new LinkedList<>();
 
-                                        jos.begMethod("public", "", "void", setterName(propName));
-                                        {
-                                            jos.methodArg(propType, "value");
-                                            jos.println("        this." + propName + " = value;");
-                                        }
-                                        jos.endMethod();
+                        for (AnnotationMirror propMirror : props) {
+                            SAPAnnotation propAnn = new SAPAnnotation(propMirror);
+                            String propName = propAnn.getValueFor("name").toString();
+                            String propType = propAnn.getValueFor("type").toString();
+                            String propDef = propAnn.getValueFor("init").toString();
+                            boolean required = propAnn.getValueFor("required").toBoolean();
 
-                                        jos.begMethod("public", "", propType, getterName(propName));
-                                        {
-                                            jos.println("        return this." + propName + ";");
-                                        }
-                                        jos.endMethod();
-                                        jos.emptyLine();
-                                    }
-                                }
+                            if (required) {
+                                nonNullProps.add(propName);
                             }
+
+                            verbose("Generating property: " + propName);
+                            String defValue = propDef.trim().length() > 0 ? propDef : null;
+                            jos.field("private", propType, propName, defValue);
+
+                            jos.begMethod("public", "", "void", setterName(propName));
+                            {
+                                jos.methodArg(propType, "value");
+                                jos.println("        this." + propName + " = value;");
+                            }
+                            jos.endMethod();
+
+                            jos.begMethod("public", "", propType, getterName(propName));
+                            {
+                                jos.println("        return this." + propName + ";");
+                            }
+                            jos.endMethod();
+                            jos.emptyLine();
+                        }
+
+                        if (!nonNullProps.isEmpty()) {
+                            jos.begMethod("public", "", "void", "validate");
+                            jos.println("        StringBuilder sb = new StringBuilder();");
+                            jos.println("        String space = \"\";");
+                            for (String propName : nonNullProps) {
+                                jos.println("        if (this." + propName + " == null) {");
+                                jos.println("            sb.append(space);");
+                                jos.println("            space = \" \";");
+                                jos.println("            sb.append(\"'" + propName + "' cannot be null!\");");
+                                jos.println("        }");
+                            }
+                            jos.println("        if (sb.length() > 0) throw new IllegalStateException(sb.toString());");
+                            jos.endMethod();
                         }
                     }
                     jos.endClass();

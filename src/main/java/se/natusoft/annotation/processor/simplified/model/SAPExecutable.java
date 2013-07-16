@@ -50,17 +50,17 @@ import javax.lang.model.type.TypeMirror;
 /**
  * This wraps an ExecutableElement and represents a constructor or method.
  */
-public class Executable extends BaseElement {
+public class SAPExecutable extends SAPBaseElement {
     //
     // Cosntructors
     //
 
     /**
-     * Creates a new Executable.
+     * Creates a new SAPExecutable.
      *
      * @param element The element representing the field.
      */
-    public Executable(Element element) {
+    public SAPExecutable(Element element) {
         super(element);
     }
 
@@ -92,11 +92,11 @@ public class Executable extends BaseElement {
     /**
      * Returns parameters.
      */
-    public List<Variable> getParameters() {
-        List<Variable> parameters = new ArrayList<Variable>();
+    public List<SAPVariable> getParameters() {
+        List<SAPVariable> parameters = new ArrayList<SAPVariable>();
 
         for (VariableElement elem : getExecutable().getParameters()) {
-            parameters.add(new Variable(elem));
+            parameters.add(new SAPVariable(elem));
         }
 
         return parameters;
