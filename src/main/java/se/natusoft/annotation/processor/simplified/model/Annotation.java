@@ -76,7 +76,7 @@ public class Annotation {
      *
      * @param name The annotation method to get the value for.
      */
-    public AnnotationValue getValueFor(String name) {
+    public AnnotationValue getAnnotationValueFor(String name) {
         AnnotationValue value = null;
 
         for (ExecutableElement executableElement : this.annotationMirror.getElementValues().keySet()) {
@@ -97,4 +97,77 @@ public class Annotation {
         return value;
     }
 
+    /**
+     * Returns the value for named annotation method.
+     *
+     * @param name The annotation method to get the value for.
+     */
+    public AObject getValueFor(String name) {
+        AnnotationValue av = getAnnotationValueFor(name);
+        if (av != null) {
+            return new AObject(av.getValue());
+        }
+
+        return null;
+    }
+
+    //
+    // Inner Classes
+    //
+
+    public static class AObject {
+        //
+        // Private Members
+        //
+
+        private Object object;
+
+        //
+        // Constructors
+        //
+
+        public AObject(Object object) {
+            this.object = object;
+        }
+
+        //
+        // Methods
+        //
+
+        public Object toObject() {
+            return this.object;
+        }
+
+        public String toString() {
+            return this.object.toString();
+        }
+
+        public int toInt() {
+            return (Integer)this.object;
+        }
+
+        public long toLong() {
+            return (Long)this.object;
+        }
+
+        public float toFloat() {
+            return (Float)this.object;
+        }
+
+        public double toDouble() {
+            return (Double)this.object;
+        }
+
+        public boolean toBoolean() {
+            return (Boolean)this.object;
+        }
+
+        public byte toByte() {
+            return (Byte)this.object;
+        }
+
+        public char toChar() {
+            return (Character)this.object;
+        }
+    }
 }

@@ -73,3 +73,113 @@ The se.natusoft.annotation.processor.simplified.model contains the following cla
 
 These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
 
+Here is an example of a complete processor:
+
+    @AutoDiscovery
+    @ProcessedAnnotations({Bean.class})
+    @SupportedSourceVersion(SourceVersion.RELEASE_7)
+    public class BeanProcessor extends SimplifiedAnnotationProcessor {
+        //
+        // Private Members
+        //
+
+        private static final boolean verbose = true;
+
+        private List<Element> toGenerate = null;
+
+
+        //
+        // Constructors
+        //
+
+        public BeanProcessor() {
+            super(verbose);
+        }
+
+        //
+        // Methods
+        //
+
+        @NewRound
+        public void newRound() {
+            this.toGenerate = new LinkedList<>();
+        }
+
+        @Process(Bean.class)
+        public void processBean(Set<? extends Element> annotatedElements) {
+            for (Element element : annotatedElements) {
+                this.toGenerate.add(element);
+            }
+        }
+
+        @GenerateSource
+        public void generate(GenerationSupport generationSupport) {
+            try {
+                for (Element annotatedElement : this.toGenerate) {
+                    TypeElement type = (TypeElement)annotatedElement;
+
+                    String genQName = type.getEnclosingElement().toString() + "." + type.getSuperclass().toString();
+                    JavaSourceOutputStream jos = generationSupport.getToBeCompiledJavaSourceOutputStream(genQName);
+                    jos.packageLine(type.getEnclosingElement().toString());
+                    jos.generatedAnnotation(getClass().getName(), "");
+                    jos.begClass("public", "", type.getSuperclass().toString());
+                    jos.begMethod("protected", "", "", type.getSuperclass().toString());
+                    jos.endMethod();
+                    jos.emptyLine();
+                    {
+                        for (AnnotationMirror am : type.getAnnotationMirrors()) {
+                            for (ExecutableElement ee : am.getElementValues().keySet()) {
+                                if (ee.getSimpleName().contentEquals("value")) {
+                                    AnnotationValue annVal = am.getElementValues().get(ee);
+                                    List<AnnotationMirror> props = (List<AnnotationMirror>)annVal.getValue();
+
+                                    for (AnnotationMirror propMirror : props) {
+                                        Annotation propAnn = new Annotation(propMirror);
+                                        String propName = propAnn.getValueFor("name").toString(); // toInt() / toLong() / toFloat() ...
+                                        String propType = propAnn.getValueFor("type").toString();
+                                        String propDef = propAnn.getValueFor("init").toString();
+
+                                        verbose("Generating property: " + propName);
+                                        String defValue = propDef.trim().length() > 0 ? propDef : null;
+                                        jos.field("private", propType, propName, defValue);
+
+                                        jos.begMethod("public", "", "void", setterName(propName));
+                                        {
+                                            jos.methodArg(propType, "value");
+                                            jos.println("        this." + propName + " = value;");
+                                        }
+                                        jos.endMethod();
+
+                                        jos.begMethod("public", "", propType, getterName(propName));
+                                        {
+                                            jos.println("        return this." + propName + ";");
+                                        }
+                                        jos.endMethod();
+                                        jos.emptyLine();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    jos.endClass();
+                    jos.close();
+                }
+            }
+            catch (IOException ioe) {
+                failCompile("@Bean processor failed to generate bean!", ioe);
+            }
+        }
+
+        private String setterName(String propName) {
+            return "set" + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+        }
+
+        private String getterName(String propName) {
+            return "get" + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+        }
+
+        @AllProcessed
+        public void done() {
+        }
+
+    }
