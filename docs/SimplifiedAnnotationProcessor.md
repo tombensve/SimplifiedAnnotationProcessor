@@ -88,9 +88,7 @@ These wrappers of javax.lang.model.element.* models makes it a little bit easier
     <repositories>
         <repository>
             <id>maven-natusoft-se</id>
-            <name>
-                Natusofts maven repository
-            </name>
+            <name>Natusofts maven repository</name>
             <url>http://maven.natusoft.se/</url>
         </repository>
     </repositories>
@@ -98,9 +96,7 @@ These wrappers of javax.lang.model.element.* models makes it a little bit easier
     <pluginRepositories>
         <pluginRepository>
             <id>maven-natusoft-se</id>
-            <name>
-                Natusoft maven repository.
-            </name>
+            <name>Natusoft maven repository.</name>
             <url>http://maven.natusoft.se/</url>
         </pluginRepository>
     </pluginRepositories>
