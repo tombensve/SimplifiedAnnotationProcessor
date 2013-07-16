@@ -64,12 +64,12 @@ Use the `failCompile(...)` method of this base class to cause a compilation fail
 
 The se.natusoft.annotation.processor.simplified.model contains the following classes:
    
-     Annotation     - Wraps an AnnotationMirror
-     BaseElement    - Baseclass for all other in this package.
-     Executable     - Wraps ExecutableElement (constructors and methods)
-     Variable       - Wraps VariableElement (field, parameter, etc)
-     MemberVariable - Supclass of Variable and provides getter for the Type the member is part of.
-     Type           - Wraps TypeElement (Class, Interace, Enum)
+     SAPAnnotation     - Wraps an AnnotationMirror
+     SAPBaseElement    - Baseclass for all other in this package.
+     SAPExecutable     - Wraps ExecutableElement (constructors and methods)
+     SAPVariable       - Wraps VariableElement (field, parameter, etc)
+     SAPMemberVariable - Supclass of Variable and provides getter for the Type the member is part of.
+     SAPType           - Wraps TypeElement (Class, Interace, Enum)
 
 These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
 
