@@ -49,14 +49,6 @@
         Dependencies
     -->
     <dependencies>
-        <!--
-        <dependency>
-            <groupId>se.natusoft.tools.codelicmgr</groupId>
-            <artifactId>CodeLicenseManager-annotations-retention-source</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -64,6 +56,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-repository-upload</id>
+            <url>ftp://${maven.repo.upload}/maven.natusoft.se/public_html</url>
+        </repository>
+    </distributionManagement>
 
     <!--
         Building
@@ -131,10 +130,98 @@
                 repository.
             -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <createChecksum>true</createChecksum>
                 </configuration>
+            </plugin>
+
+            <!--
+                Generate sources jar.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                Generate javadoc
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                    <execution>
+                        <id>gendocs</id>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>se.natusoft.maven.plugin</groupId>
+                <artifactId>ftp-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>upload-javadoc</id>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <files>**/.*</files>
+                            <targetHost>${javadoc.upload}</targetHost>
+                            <targetPort>21</targetPort>
+                            <userName>${web.server.user}</userName>
+                            <password>${web.server.pw}</password>
+                            <targetPath>${javadoc.base.path}/SimplifiedAnnotationProcessor</targetPath>
+                            <baseDir>${basedir}/target/apidocs</baseDir>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>upload-jar</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <configuration>
+                            <baseDir>${basedir}/target</baseDir>
+                            <files>${project.artifactId}-${project.version}.jar</files>
+                            <targetHost>${maven.repo.upload}</targetHost>
+                            <targetPort>21</targetPort>
+                            <targetPath>/download.natusoft.se/public_html/annotation</targetPath>
+                            <userName>${web.server.user}</userName>
+                            <password>${web.server.pw}</password>
+                        </configuration>
+                    </execution>
+
+                </executions>
             </plugin>
 
             <!--

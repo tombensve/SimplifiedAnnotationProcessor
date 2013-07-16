@@ -12,5 +12,8 @@ _A tool for generating HTML and PDF from markdown for the purpose of documentati
 
 [Docs](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/docs/SimplifiedAnnotationProcessor.md)
 
+[Javadoc](http://apidoc.natusoft.se/SimplifiedAnnotationProcessor/)
+
 [Licenses](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/licenses.md)
 
+[Download](http://download.natusoft.se/annotation/simplified-annotation-processor-1.0.jar)
