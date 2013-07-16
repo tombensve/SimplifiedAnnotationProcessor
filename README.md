@@ -8,7 +8,7 @@ __Author:__ Tommy Svensson (tommy@natusoft.se)
 
 ----
 
-_Baseclass and support classes for simplifying annotation processing._
+_Base class and support classes for simplifying annotation processing._
 
 [Docs](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/docs/SimplifiedAnnotationProcessor.md)
 
