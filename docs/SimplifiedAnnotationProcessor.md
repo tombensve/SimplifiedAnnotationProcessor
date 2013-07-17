@@ -16,7 +16,8 @@ An abstract annotation processor base class that simplifies the annotation proce
     import se.natusoft.annotation.processor.simplified.annotations.GenerateSource;
     import se.natusoft.annotation.processor.simplified.annotations.NewRound;
     import se.natusoft.annotation.processor.simplified.annotations.ProcessedAnnotations;
-  
+
+    @AutoDiscovery
     @ProcessedAnnotations({MyAnnotation.class})
     @SupportedSourceVersion(SourceVersion.RELEASE_6)
     public class MyAnnotationProcessor extends SimplifiedAnnotationProcessor {
@@ -72,6 +73,14 @@ The se.natusoft.annotation.processor.simplified.model contains the following cla
      SAPType           - Wraps TypeElement (Class, Interace, Enum)
 
 These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
+
+## Processed utility annotations
+
+**@AutoDiscovery** - Use this annotation on an annotation processor to automatically update META-INF/services/javax.annotation.Processor with the processor. The file will be created if it does not exist.
+
+**@MavenResource(resourceClassPath)** - This annotation is for fields and points out a classpath resource, and have a processor that compile-time verifies that the pointed to resource does exist. This will look under src/main/resources for the resource, and will only work if compiled by maven since it expects the current directory to be the compiled project root.
+
+**@ResourcePath** - This annotation should be used on String constants that points out a classpath resource, and have a processor that compile-time verifies that the resource does exist. This will first check in the compile classpath, and if not found then check for a file under src/main/resources which will work if built by maven. The last is probably redundant since I think maven includes the resources on the classpath during compile. Note that this takes the resource from the String constant. This annotation is probably more useful than @MavenResource.
 
 ## Maven usage
 

@@ -44,8 +44,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation points out a classpath resource file, and have a processor that compiletime
- * verifies that the pointed to resource does exist. 
+ * This annotation should be used on String constants that points out a classpath resource, and have a
+ * processor that compile-time verifies that the resource does exist. This will first check in the compile
+ * classpath, and if not found then check for a file under src/main/resources which will work if built by
+ * maven. The last is probably redundant since I think maven includes the resources on the classpath during
+ * compile. Note that this takes the resource from the String constant. This annotation is probably more useful
+ * than @MavenResource.
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD})

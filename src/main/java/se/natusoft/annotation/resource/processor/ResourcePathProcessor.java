@@ -68,7 +68,7 @@ public class ResourcePathProcessor extends AbstractProcessor {
             // We only have one annotation, but this is still easier.
             for (TypeElement annotationType : annotations) {
                 for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(annotationType)) {
-                    // Our annotation is only valid on a field so we can asume that our element
+                    // Our annotation is only valid on a field so we can assume that our element
                     // represents a field, but just to show how we check:
                     if (annotatedElement.getKind() == ElementKind.FIELD) {
                         VariableElement field = (VariableElement)annotatedElement;
@@ -117,7 +117,7 @@ public class ResourcePathProcessor extends AbstractProcessor {
     }
 
     private boolean checkInMavenResourcePath(String path) {
-        // If it is a maven comile that calls us then the maven project root will be the current directory.
+        // If it is a maven compile that calls us then the maven project root will be the current directory.
         File resource = new File("src/main/resources");
         resource = new File(resource, path);
         return resource.exists();

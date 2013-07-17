@@ -44,8 +44,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation points out a classpath resource file, and have a processor that compiletime
- * verifies that the pointed to resource does exist. 
+ * This annotation is for fields and points out a classpath resource, and have a processor that compile-time
+ * verifies that the pointed to resource does exist. This will look under src/main/resources for the resource,
+ * and will only work if compiled by maven since it expects the current directory to be the compiled
+ * project root.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
