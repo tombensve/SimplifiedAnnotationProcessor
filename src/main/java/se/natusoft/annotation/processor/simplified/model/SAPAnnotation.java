@@ -38,10 +38,7 @@
  */
 package se.natusoft.annotation.processor.simplified.model;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 
 /**
  * Wraps an AnnotationMirror.
@@ -54,6 +51,9 @@ public class SAPAnnotation {
     /** The mirror image of the annotation. */
     private AnnotationMirror annotationMirror;
 
+    /** The parent if any. */
+    private Element parent;
+
     //
     // Constructors
     //
@@ -65,6 +65,17 @@ public class SAPAnnotation {
      */
     public SAPAnnotation(AnnotationMirror annotationMirror) {
         this.annotationMirror = annotationMirror;
+    }
+
+    /**
+     * Creates a new SAPAnnotation.
+     *
+     * @param annotationMirror The AnnotationMirror to wrap.
+     * @param parent The parent element.
+     */
+    public SAPAnnotation(AnnotationMirror annotationMirror, Element parent) {
+        this.annotationMirror = annotationMirror;
+        this.parent = parent;
     }
 
     //
@@ -109,6 +120,20 @@ public class SAPAnnotation {
         }
 
         return null;
+    }
+
+    /**
+     * Returns the parent element if any.
+     */
+    public Element getParent() {
+        return this.parent;
+    }
+
+    /**
+     * Returns true if this annotation has a parent specified.
+     */
+    public boolean hasParent() {
+        return this.parent != null;
     }
 
     //

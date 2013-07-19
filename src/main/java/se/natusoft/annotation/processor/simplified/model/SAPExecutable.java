@@ -64,6 +64,16 @@ public class SAPExecutable extends SAPBaseElement {
         super(element);
     }
 
+    /**
+     * Creates a new SAPExecutable.
+     *
+     * @param element The element representing the field.
+     * @param parent The parent element,
+     */
+    public SAPExecutable(Element element, Element parent) {
+        super(element, parent);
+    }
+
     //
     // Methods
     //
@@ -96,7 +106,7 @@ public class SAPExecutable extends SAPBaseElement {
         List<SAPVariable> parameters = new ArrayList<SAPVariable>();
 
         for (VariableElement elem : getExecutable().getParameters()) {
-            parameters.add(new SAPVariable(elem));
+            parameters.add(new SAPVariable(elem, getElement()));
         }
 
         return parameters;
@@ -132,5 +142,12 @@ public class SAPExecutable extends SAPBaseElement {
     public String getAnnotationValueAsString() {
         AnnotationValue annValue = getExecutable().getDefaultValue();
         return annValue.toString();
+    }
+
+    /**
+     * Returns the parent as a SAPType.
+     */
+    public SAPType getParentType() {
+        return new SAPType(getParent());
     }
 }

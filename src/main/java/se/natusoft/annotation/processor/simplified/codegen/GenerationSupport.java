@@ -91,6 +91,13 @@ public class GenerationSupport {
     }
 
     /**
+     * Returns the filer.
+     */
+    public Filer getFiler() {
+        return this.filer;
+    }
+
+    /**
      * Returns a JavaFileObject for writing Java source code to be compiled.
      *
      * @param qualifiedName The fully qualified name of the class to write.
@@ -123,7 +130,9 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getToBeCompiledSourceFileStream(String qualifiedName, Element element) throws IOException {
-        return getWritableJavaFileObjectForToBeCompiledSource(qualifiedName, element).openOutputStream();
+        JavaFileObject jfo = getWritableJavaFileObjectForToBeCompiledSource(qualifiedName, element);
+        jfo.delete();
+        return jfo.openOutputStream();
     }
 
     /**
@@ -134,7 +143,9 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getToBeCompiledSourceFileStream(String qualifiedName) throws IOException {
-        return getWritableJavaFileObjectForToBeCompiledSource(qualifiedName).openOutputStream();
+        JavaFileObject jfo = getWritableJavaFileObjectForToBeCompiledSource(qualifiedName);
+        jfo.delete();
+        return jfo.openOutputStream();
     }
 
     /**
@@ -239,7 +250,9 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getWritableResourceFileStream(String pkg, String name, Element element) throws IOException {
-        return getWritableResourceFileObject(pkg, name, element).openOutputStream();
+        FileObject fo = getWritableResourceFileObject(pkg, name, element);
+        fo.delete();
+        return fo.openOutputStream();
     }
 
     /**
@@ -273,7 +286,9 @@ public class GenerationSupport {
      * @throws IOException
      */
     public OutputStream getWritableResourceFileStream(String pkg, String name) throws IOException {
-        return getWritableResourceFileObject(pkg, name).openOutputStream();
+        FileObject fo = getWritableResourceFileObject(pkg, name);
+        fo.delete();
+        return fo.openOutputStream();
     }
 
     /**

@@ -56,6 +56,9 @@ public class SAPBaseElement {
     /** The base element. */
     private Element element = null;
 
+    /** The parent of the element if any. */
+    private Element parent = null;
+
     //
     // Constructor
     //
@@ -69,6 +72,16 @@ public class SAPBaseElement {
         this.element = element;
     }
 
+    /**
+     * Creates a new SAPBaseElement.
+     *
+     * @param element The element to wrap.
+     */
+    public SAPBaseElement(Element element, Element parent) {
+        this(element);
+        this.parent = parent;
+    }
+
     //
     // Methods
     //
@@ -78,6 +91,20 @@ public class SAPBaseElement {
      */
     protected Element getElement() {
         return this.element;
+    }
+
+    /**
+     * Returns the parent element.
+     */
+    public Element getParent() {
+        return this.parent;
+    }
+
+    /**
+     * Returns true if this element has a parent element.
+     */
+    public boolean hasParent() {
+        return this.parent != null;
     }
 
     /**
@@ -149,7 +176,7 @@ public class SAPBaseElement {
         List<SAPAnnotation> annotations = new ArrayList<SAPAnnotation>();
 
         for (AnnotationMirror annotationMirror : getAnnotationMirrors()) {
-            SAPAnnotation annotation = new SAPAnnotation(annotationMirror);
+            SAPAnnotation annotation = new SAPAnnotation(annotationMirror, this.element);
             annotations.add(annotation);
         }
 
@@ -166,7 +193,7 @@ public class SAPBaseElement {
 
         AnnotationMirror annMirror = getAnnotationMirrorByName(annotation);
         if (annMirror != null) {
-            ann = new SAPAnnotation(annMirror);
+            ann = new SAPAnnotation(annMirror, this.element);
         }
 
         return ann;

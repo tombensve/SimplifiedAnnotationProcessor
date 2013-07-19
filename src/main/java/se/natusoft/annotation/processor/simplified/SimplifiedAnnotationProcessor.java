@@ -158,6 +158,9 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
 
     /** If true some verbose information about processing is displayed. */
     private boolean verbose = false;
+
+    /** Will be set to false in first call! */
+    private boolean firstCall = true;
     
     //
     // Constructors

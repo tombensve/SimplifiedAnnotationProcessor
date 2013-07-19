@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 /**
@@ -95,6 +97,33 @@ public class SAPType extends SAPBaseElement {
     }
 
     /**
+     * Returns the type this type extends without eventual package part.
+     */
+    public String getExtendsSimpleName() {
+        String ext = getExtends();
+        int ix = ext.lastIndexOf('.');
+        if (ix >= 0) {
+            ext = ext.substring(ix + 1);
+        }
+
+        return ext;
+    }
+
+    /**
+     * Returns the interfaces implemented by this type.
+     */
+    public List<SAPType> getInterfaces() {
+        List<SAPType> ifs = new LinkedList<SAPType>();
+
+        for (TypeMirror tm : getTypeElement().getInterfaces()) {
+            DeclaredType dt = (DeclaredType)tm;
+            ifs.add(new SAPType(dt.asElement()));
+        }
+
+        return ifs;
+    }
+
+    /**
      * Returns the package.
      */
     public String getPackage() {
@@ -110,7 +139,7 @@ public class SAPType extends SAPBaseElement {
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind().isField()) {
-                fields.add(new SAPVariable(elem));
+                fields.add(new SAPVariable(elem, getElement()));
             }
         }
 
@@ -125,7 +154,7 @@ public class SAPType extends SAPBaseElement {
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind() == ElementKind.CONSTRUCTOR) {
-                constructors.add(new SAPExecutable(elem));
+                constructors.add(new SAPExecutable(elem, getElement()));
             }
         }
 
@@ -140,7 +169,7 @@ public class SAPType extends SAPBaseElement {
 
         for (Element elem : getTypeElement().getEnclosedElements()) {
             if (elem.getKind() == ElementKind.METHOD) {
-                methods.add(new SAPExecutable(elem));
+                methods.add(new SAPExecutable(elem, getElement()));
             }
         }
 
@@ -155,7 +184,7 @@ public class SAPType extends SAPBaseElement {
 
         for (Element elem : elementUtils.getAllMembers(getTypeElement())) {
             if (elem.getKind() == ElementKind.METHOD) {
-                methods.add(new SAPExecutable(elem));
+                methods.add(new SAPExecutable(elem, getElement()));
             }
         }
 

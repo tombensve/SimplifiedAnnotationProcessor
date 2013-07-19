@@ -61,6 +61,16 @@ public class SAPVariable extends SAPBaseElement {
         super(element);
     }
 
+    /**
+     * Creates a new SAPVariable.
+     *
+     * @param element The element representing the field.
+     * @param parent The parent element.
+     */
+    public SAPVariable(Element element, Element parent) {
+        super(element, parent);
+    }
+
     //
     // Methods
     //
@@ -86,9 +96,39 @@ public class SAPVariable extends SAPBaseElement {
         return getVariable().getConstantValue();
     }
 
+    /**
+     * Returns the type as a string.
+     */
     public String getTypeAsString() {
         return getVariable().asType().toString();
     }
 
+    /**
+     * Returns true if this represents a method parameter.
+     */
+    public boolean isParameter() {
+        return getElement().getKind() == ElementKind.PARAMETER;
+    }
 
+    /**
+     * Returns true if this represents a class field.
+     */
+    public boolean isField() {
+        return getElement().getKind() == ElementKind.FIELD;
+    }
+
+    /**
+     * Returns the parent as a SAPType for when this is a field.
+     */
+    public SAPType getParentType() {
+        return new SAPType(getParent());
+    }
+
+    /**
+     * Returns the parent as a SAPExecutable when this is a method parameter.
+     * @return
+     */
+    public SAPExecutable getParentExecutable() {
+        return new SAPExecutable(getParent());
+    }
 }
