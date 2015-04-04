@@ -97,19 +97,20 @@ These wrappers of javax.lang.model.element.* models makes it a little bit easier
     <repositories>
         <repository>
             <id>maven-natusoft-se</id>
-            <name>Natusofts maven repository</name>
-            <url>http://maven.natusoft.se/</url>
+            <name>Natusofts Bintray maven repository</name>
+            <url>https://dl.bintray.com/tommy/maven/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>maven-natusoft-se</id>
-            <name>Natusoft maven repository.</name>
-            <url>http://maven.natusoft.se/</url>
+            <name>Natusofts Bintray maven repository.</name>
+            <url>https://dl.bintray.com/tommy/maven/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
+This have been submitted to Bintrays JCenter but have not yet been approved. 
 
 ## Example of a complete processor:
 

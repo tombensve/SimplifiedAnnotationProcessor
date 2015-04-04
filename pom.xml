@@ -59,8 +59,9 @@
 
     <distributionManagement>
         <repository>
-            <id>maven-repository-upload</id>
-            <url>ftp://${maven.repo.upload}/maven.natusoft.se/public_html</url>
+            <id>bintray-tommy-maven-SimplifiedAnnotationProcessor</id>
+            <name>tommy-maven-SimplifiedAnnotationProcessor</name>
+            <url>https://api.bintray.com/maven/tommy/maven/SimplifiedAnnotationProcessor</url>
         </repository>
     </distributionManagement>
 
@@ -153,31 +154,6 @@
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--
-                Generate javadoc
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                    <execution>
-                        <id>gendocs</id>
-                        <goals>
-                            <goal>javadoc</goal>
-                        </goals>
-                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -305,17 +281,17 @@
                             <dependency>
                                 <groupId>se.natusoft.tools.codelicmgr</groupId>
                                 <artifactId>CodeLicenseManager-licenses-common-opensource</artifactId>
-                                <version>2.1.1</version>
+                                <version>2.1.3</version>
                             </dependency>
                             <dependency>
                                 <groupId>se.natusoft.tools.codelicmgr</groupId>
                                 <artifactId>CodeLicenseManager-source-updater-slashstar-comment</artifactId>
-                                <version>2.1.1</version>
+                                <version>2.1.3</version>
                             </dependency>
                             <dependency>
                                 <groupId>se.natusoft.tools.codelicmgr</groupId>
                                 <artifactId>CodeLicenseManager-source-updater-html-xml</artifactId>
-                                <version>2.1.1</version>
+                                <version>2.1.3</version>
                             </dependency>
                         </dependencies>
 
@@ -365,5 +341,39 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>javadoc</id>
+            <build>
+                <plugins>
+                    <!--
+                        Generate javadoc
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                            <execution>
+                                <id>gendocs</id>
+                                <goals>
+                                    <goal>javadoc</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 </project>

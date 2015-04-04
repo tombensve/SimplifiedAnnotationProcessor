@@ -1,40 +1,40 @@
-/* 
- * 
+/*
+ *
  * PROJECT
  *     Name
  *         SimplifiedAnnotationProcessor
- *     
+ *
  *     Code Version
  *         1.0
- *     
+ *
  *     Description
  *         An abstract annotation processor base class that simplifies the annotation
  *         processing, but also limits it slightly. It is however good enough for most
  *         cases and makes things a bit easier and clearer.
- *         
+ *
  * COPYRIGHTS
  *     Copyright (C) 2013 by Natusoft AB All rights reserved.
- *     
+ *
  * LICENSE
  *     Apache 2.0 (Open Source)
- *     
+ *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
  *     You may obtain a copy of the License at
- *     
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  *     Unless required by applicable law or agreed to in writing, software
  *     distributed under the License is distributed on an "AS IS" BASIS,
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *     
+ *
  * AUTHORS
  *     tommy ()
  *         Changes:
  *         2013-07-15: Created!
- *         
+ *
  */
 package se.natusoft.annotation.processor.simplified.codegen;
 
@@ -104,7 +104,7 @@ import java.util.Properties;
  * <li><a href="#delayedPrintln(java.lang.String)">delayedPrintln(String text)</a></li>
  * </ul>
  * The text passed to these method will be put in a queue, one entry per call. Any call to other print*(*), format(*)
- * methods will first flush the queue before printing its text. use rawPrint(*) methods to print without flushing. 
+ * methods will first flush the queue before printing its text. use rawPrint(*) methods to print without flushing.
  * To make this comprehensible, lets take an example:
  * <p>
  * Take generating a method with zero, one, or many arguments after a '(' and that must end with ") {" (ignoring
@@ -193,7 +193,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
     public void decrementIndent() {
         this.indent = this.indent.substring(0, this.indent.length() - 4);
     }
-    
+
     /**
      * Writes one indent.
      */
@@ -235,7 +235,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
 
     /**
      * Delays printing of text until next non raw print.
-     * 
+     *
      * @param text The text to print.
      */
     public void delayedPrint(String text) {
@@ -315,7 +315,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
         return getCaller(3);
     }
 
-    /** 
+    /**
      * Returns the caller.
      */
     private String getCaller(int ix) {
@@ -416,7 +416,7 @@ public class CodeGeneratorOutputStream extends PrintStream {
      * SAPVariable references are in the form of ${name} or ${get:name} which
      * takes the name and converts it to a getter including (), or ${set:name}
      * which takes the name and converts it to a setter <b>not</b> including ().
-     * 
+     *
      * @param text The text to print.
      * @param varContext The variable context to expand variables from.
      */
