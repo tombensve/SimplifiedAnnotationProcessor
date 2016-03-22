@@ -5,7 +5,7 @@
  *         SimplifiedAnnotationProcessor
  *     
  *     Code Version
- *         1.0
+ *         1.1
  *     
  *     Description
  *         An abstract annotation processor base class that simplifies the annotation

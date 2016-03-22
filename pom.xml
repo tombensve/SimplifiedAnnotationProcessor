@@ -5,7 +5,7 @@
     <groupId>se.natusoft.annotation</groupId>
     <artifactId>simplified-annotation-processor</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>SimplifiedAnnotationProcessor</name>
 
     <url>http://github/tombensve/SimplifiedAnnotationProcessor</url>
