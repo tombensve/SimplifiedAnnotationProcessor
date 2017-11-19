@@ -2,7 +2,7 @@
 
 Copyright © 2013 Natusoft AB
 
-__Version:__ 1.1
+__Version:__ 1.2
 
 __Author:__ Tommy Svensson (tommy@natusoft.se)
 
@@ -21,6 +21,10 @@ _Base class and support classes for simplifying annotation processing._
 ----
 
 ## History
+
+## Version 1.2
+
+Brought up to date with other dependencies. Functionwise there is no difference.
 
 ### Version 1.1
 

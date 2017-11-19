@@ -1,40 +1,40 @@
-/* 
- * 
+/*
+ *
  * PROJECT
  *     Name
  *         SimplifiedAnnotationProcessor
- *     
+ *
  *     Code Version
  *         1.1
- *     
+ *
  *     Description
  *         An abstract annotation processor base class that simplifies the annotation
  *         processing, but also limits it slightly. It is however good enough for most
  *         cases and makes things a bit easier and clearer.
- *         
+ *
  * COPYRIGHTS
  *     Copyright (C) 2013 by Natusoft AB All rights reserved.
- *     
+ *
  * LICENSE
  *     Apache 2.0 (Open Source)
- *     
+ *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
  *     You may obtain a copy of the License at
- *     
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- *     
+ *
  *     Unless required by applicable law or agreed to in writing, software
  *     distributed under the License is distributed on an "AS IS" BASIS,
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *     
+ *
  * AUTHORS
  *     tommy ()
  *         Changes:
  *         2013-07-15: Created!
- *         
+ *
  */
 package se.natusoft.annotation.processor.simplified;
 
@@ -88,9 +88,9 @@ import se.natusoft.annotation.processor.simplified.model.SAPType;
  *      // Gets called for each new processing round for clearing any already processed data.
  *      // Please note that only the first annotated method found will be called! Only one
  *      // methods should be annotated with @NewRound.
- *     &nbsp;@NewRound 
- *      public void newRound() { 
- *         
+ *     &nbsp;@NewRound
+ *      public void newRound() {
+ *
  *      }
  *
  *      // Gets called for processing the specified annotation per round.
@@ -105,7 +105,7 @@ import se.natusoft.annotation.processor.simplified.model.SAPType;
  *      // All methods annotated with @Generate will be called in order. This is a convenience for when you want to
  *      // generate more than one file and wants to do it from separate methods. You can of course let your annotated
  *      // method call other methods to do the job. As said, multiple @GenerateSource annotated methods is only a convenicence.
- *     &nbsp;@GenerateSource 
+ *     &nbsp;@GenerateSource
  *      public void generate(GenerationSupport generationSupport) {
  *
  *      }
@@ -114,7 +114,7 @@ import se.natusoft.annotation.processor.simplified.model.SAPType;
  *      // In that case the methods will be called in order. In addition to possibly doing cleanup you might want to generare
  *      // resources that require input from all rounds of processing here. In that case you could have a generateMyResource()
  *      // method annotated with @AllProcessed and a cleanup() or done() or whatever method also annotated with @AllProcessed.
- *     &nbsp;@AllProcessed 
+ *     &nbsp;@AllProcessed
  *      public void done() {
  *
  *      }
@@ -139,7 +139,7 @@ import se.natusoft.annotation.processor.simplified.model.SAPType;
  * </pre>
  * These wrappers of javax.lang.model.element.* models makes it a little bit easier extracting information.
  */
-public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends AbstractProcessor implements Verbose {
+public abstract class SimplifiedAnnotationProcessor extends AbstractProcessor implements Verbose {
     //
     // Private Members
     //
@@ -161,7 +161,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
 
     /** Will be set to false in first call! */
     private boolean firstCall = true;
-    
+
     //
     // Constructors
     //
@@ -172,7 +172,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
     protected SimplifiedAnnotationProcessor() {
         super();
     }
-    
+
     /**
      * Creates a new SimplifiedAnnotationProcessor.
      *
@@ -218,7 +218,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
     }
 
     /**
-     * Returns the element utils. 
+     * Returns the element utils.
      */
     protected Elements getElementUtils() {
         return this.elementUtils;
@@ -426,6 +426,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
      * @param annotations The annotations to process for this round.
      * @param roundEnv information about the round.
      */
+    @SuppressWarnings("Duplicates")
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         setupLocals();
@@ -524,7 +525,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
 
         return allAnnotationsHandled;
     }
-    
+
     /**
      * Support method to process a specific annotation type.
      *
@@ -574,7 +575,7 @@ public abstract class SimplifiedAnnotationProcessor<ProcessingContext> extends A
     //
     // Private Support Methods
     //
-    
+
     /**
      * Support method for finding the method to invoke for processing a specific annotation.
      * Null is returned if none found.
