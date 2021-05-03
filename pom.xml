@@ -8,7 +8,7 @@
     <version>1.3</version>
     <name>SimplifiedAnnotationProcessor</name>
 
-    <url>http://github/tombensve/SimplifiedAnnotationProcessor</url>
+    <url>https://github/tombensve/SimplifiedAnnotationProcessor</url>
 
     <!--
         Project Information
@@ -21,7 +21,7 @@
     <properties>
         <copyrightYear>2013</copyrightYear>
         <copyrightHolder>Natusoft AB</copyrightHolder>
-        <copyrightHolderWeb>http://www.natusoft.se/</copyrightHolderWeb>
+        <copyrightHolderWeb>https://www.natusoft.se/</copyrightHolderWeb>
     </properties>
     <organization>
         <name>${copyrightHolder}</name>
@@ -31,7 +31,7 @@
     <licenses>
         <license>
             <name>Apache 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
     <developers>
@@ -42,7 +42,7 @@
     </developers>
     <issueManagement>
         <system>github</system>
-        <url>http://github.com/tombensve/SimplifiedAnnotationProcessor/issues</url>
+        <url>https://github.com/tombensve/SimplifiedAnnotationProcessor/issues</url>
     </issueManagement>
 
     <!--
@@ -57,11 +57,40 @@
         </dependency>
     </dependencies>
 
+    <!--
+        Make sure we have access to ns repo.
+    -->
+    <repositories>
+        <repository>
+            <id>ns-repo</id>
+            <name>ns-artifact-repository</name>
+            <url>https://download.natusoft.se/maven</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>ns-plugin-repo</id>
+            <name>na-plugin-repository</name>
+            <url>https://download.natusoft.se/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <!--            <snapshots>-->
+            <!--                <enabled>true</enabled>-->
+            <!--            </snapshots>-->
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!--
+        Distribution Management
+    -->
+
     <distributionManagement>
         <repository>
-            <id>bintray-tommy-maven-SimplifiedAnnotationProcessor</id>
-            <name>tommy-maven-SimplifiedAnnotationProcessor</name>
-            <url>https://api.bintray.com/maven/tommy/maven/SimplifiedAnnotationProcessor</url>
+            <id>download.natusoft.se</id>
+            <name>DownloadNatusoftSe-MarkdownDoc</name>
+            <url>ftp://${maven.repo.upload}/${maven.base.path}</url>
         </repository>
     </distributionManagement>
 
@@ -86,7 +115,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>6</source>
                     <target>6</target>
@@ -103,8 +132,9 @@
                 will fail.
              -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -159,48 +189,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>se.natusoft.maven.plugin</groupId>
-                <artifactId>ftp-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>upload-javadoc</id>
-                        <goals>
-                            <goal>upload</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <files>**/.*</files>
-                            <targetHost>${javadoc.upload}</targetHost>
-                            <targetPort>21</targetPort>
-                            <userName>${web.server.user}</userName>
-                            <password>${web.server.pw}</password>
-                            <targetPath>${javadoc.base.path}/SimplifiedAnnotationProcessor</targetPath>
-                            <baseDir>${basedir}/target/apidocs</baseDir>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>upload-jar</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>upload</goal>
-                        </goals>
-                        <configuration>
-                            <baseDir>${basedir}/target</baseDir>
-                            <files>${project.artifactId}-${project.version}.jar</files>
-                            <targetHost>${maven.repo.upload}</targetHost>
-                            <targetPort>21</targetPort>
-                            <targetPath>/download.natusoft.se/public_html/annotation</targetPath>
-                            <userName>${web.server.user}</userName>
-                            <password>${web.server.pw}</password>
-                        </configuration>
-                    </execution>
-
-                </executions>
-            </plugin>
-
             <!--
                 Copy relevant license files to target on install.
             -->
@@ -244,25 +232,6 @@
         Distribution Management
     -->
 
-    <repositories>
-        <repository>
-            <id>maven-natusoft-se</id>
-            <name>
-                Natusofts maven repository
-            </name>
-            <url>http://maven.natusoft.se/</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven-natusoft-se</id>
-            <name>
-                Natusoft maven repository.
-            </name>
-            <url>http://maven.natusoft.se/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <!--
         Profiles
@@ -353,7 +322,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>LATEST</version>
+                        <version>3.2.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
