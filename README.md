@@ -16,7 +16,9 @@ _Base class and support classes for simplifying annotation processing._
 
 [Licenses](https://github.com/tombensve/SimplifiedAnnotationProcessor/blob/master/licenses.md)
 
-[Download](http://download.natusoft.se/annotation/simplified-annotation-processor-1.0.jar)
+# Binaries
+
+[Accessing binaries](https://github.com/tombensve/CommonStuff/blob/master/docs/AccessingBinaries.md)
 
 ----
 
